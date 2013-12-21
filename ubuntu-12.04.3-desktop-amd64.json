@@ -1,0 +1,102 @@
+{
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "files",
+      "destination": "/tmp"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/build_time.sh",
+        "scripts/apt.sh",
+        "scripts/vbox.sh",
+        "scripts/sudo.sh",
+        "scripts/vagrant.sh",
+	"scripts/java.sh",
+	"scripts/eclipse.sh",
+	"scripts/maven.sh",
+	"scripts/jboss.sh",
+	"scripts/git.sh",
+        "scripts/cleanup.sh"
+      ],
+      "execute_command": "echo 'vagrant'|sudo -S sh '{{.Path}}'"      
+    }
+  ],
+ "post-processors": [{
+    "output": "ubuntu-12.04.3-desktop-amd64.box",
+    "type": "vagrant"
+  }],
+  "builders": [
+    {
+      "type": "virtualbox",
+      "boot_command": [
+        "<esc><esc><enter><wait>",
+        "/install/vmlinuz preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+        "debian-installer=en_US auto locale=en_US kbd-chooser/method=us <wait>",
+        "hostname={{ .Name }} <wait>",
+        "fb=false debconf/frontend=noninteractive <wait>",
+        "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=us keyboard-configuration/variant=us console-setup/ask_detect=false <wait>",
+        "initrd=/install/initrd.gz -- <enter><wait>"
+      ],
+      "boot_wait": "4s",
+      "disk_size": 32000,
+      "guest_os_type": "Ubuntu_64",
+      "http_directory": "http",
+      "iso_checksum": "ca4ecd32f1a4c6917c951f45395901ff",
+      "iso_checksum_type": "md5",
+      "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.3-alternate-amd64.iso",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "echo 'shutdown -P now' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "8000"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "2"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--vram",
+          "128"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--ioapic",
+          "on"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--rtcuseutc",
+          "on"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--accelerate3d",
+          "on"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--clipboard",
+          "bidirectional"
+        ]
+      ]
+    }
+  ]
+}
