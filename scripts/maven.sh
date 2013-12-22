@@ -1,8 +1,5 @@
 export MAVEN_VERSION=3.0.4
 
-echo "Pause for console output"
-sleep 5
-
 echo "Retrieve maven $MAVEN_VERSION binaries"
 wget http://archive.apache.org/dist/maven/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
 tar -zxvf apache-maven-$MAVEN_VERSION-bin.tar.gz -C /usr/local
